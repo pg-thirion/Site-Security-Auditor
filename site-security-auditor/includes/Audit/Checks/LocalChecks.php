@@ -199,6 +199,7 @@ final class LocalChecks {
 				if ( ! $path || ! is_file( $path ) || is_link( $path ) || DIRECTORY_SEPARATOR === '\\' || ! function_exists( 'fileperms' ) ) {
 					$unknown( 'Configuration file permissions cannot be verified on this environment.' );
 					break; }
+				clearstatcache( true, $path );
 				$perms = @fileperms( $path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Metadata read failures return unknown without emitting server paths.
 				if ( false === $perms ) {
 					$unknown( 'Configuration file permissions are unavailable.' );
