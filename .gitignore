@@ -15,3 +15,12 @@
 .env
 .env.*
 !.env.example
+
+# Local tooling artifacts
+.phpunit.result.cache
+/.impeccable/config.local.json
+/.impeccable/hook.cache.json
+/.impeccable/build/
+/.impeccable/review/
+/.impeccable/critique/
+/.impeccable/mocks/

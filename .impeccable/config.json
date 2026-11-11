@@ -1,0 +1,25 @@
+{
+  "buildPath": "code",
+  "hook": {
+    "enabled": true,
+    "limits": {
+      "maxFindings": 5,
+      "maxChars": 8000
+    }
+  },
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "site-security-auditor/src/style.css"
+        ],
+        "createdAt": "2026-11-10T06:01:23.541Z",
+        "reason": "Codex review: selectors style role=alert/status notices with the native WordPress admin 4px severity edge; DESIGN.md rules 1 and 8 preserve WordPress patterns."
+      }
+    ]
+  }
+}
