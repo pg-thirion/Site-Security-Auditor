@@ -1,0 +1,17 @@
+/vendor/
+/node_modules/
+/site-security-auditor/node_modules/
+/playwright-report/
+/test-results/
+/site-security-auditor/playwright-report/
+/site-security-auditor/test-results/
+/artifacts/
+/.tools/
+/graphify-out/
+/.wp-env.json.local
+/.wp-env.package.json
+/site-security-auditor/build/
+*.log
+.env
+.env.*
+!.env.example

@@ -1,0 +1,503 @@
+.ssa-app {
+	--ssa-canvas: #f5f7fa;
+	--ssa-panel: #fff;
+	--ssa-panel-soft: #f9fbfd;
+	--ssa-ink: #182335;
+	--ssa-muted: #536176;
+	--ssa-border: #dde4ed;
+	--ssa-brand: #3157d5;
+	--ssa-brand-hover: #2545ad;
+	--ssa-success: #18794e;
+	--ssa-critical: #a61b29;
+	--ssa-high: #b44d12;
+	--ssa-medium: #8a660c;
+	--ssa-unknown: #52657d;
+	box-sizing: border-box;
+	max-width: 1380px;
+	padding: 24px;
+	color: var(--ssa-ink);
+	background: var(--ssa-canvas);
+	font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	min-height: 100vh;
+}
+
+.ssa-app *,
+.ssa-app *::before,
+.ssa-app *::after {
+	box-sizing: inherit;
+}
+
+.ssa-app h1,
+.ssa-app h2,
+.ssa-app h3,
+.ssa-app h4 {
+	color: var(--ssa-ink);
+	line-height: 1.25;
+}
+
+.ssa-app h1 {
+	margin: 0 0 5px;
+	font-size: 28px;
+}
+
+.ssa-app h2 {
+	font-size: 18px;
+	margin: 0 0 14px;
+}
+
+.ssa-app p {
+	margin: 8px 0;
+}
+
+
+.ssa-app button,
+.ssa-app .ssa-button {
+	min-height: 44px;
+	padding: 8px 13px;
+	border: 1px solid var(--ssa-border);
+	border-radius: 8px;
+	background: #fff;
+	color: var(--ssa-ink);
+	font: inherit;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.ssa-app button:hover,
+.ssa-app .ssa-button:hover {
+	border-color: var(--ssa-brand);
+	color: var(--ssa-brand);
+}
+
+.ssa-app .ssa-tabs {
+	display: flex;
+	gap: 8px;
+	border-bottom: 1px solid var(--ssa-border);
+	margin-bottom: 20px;
+}
+
+.ssa-app .ssa-tabs button {
+	border: 0;
+	border-radius: 7px 7px 0 0;
+	background: transparent;
+	color: var(--ssa-muted);
+}
+
+.ssa-app .ssa-tabs button[aria-current="page"] {
+	color: var(--ssa-brand);
+	box-shadow: inset 0 -3px var(--ssa-brand);
+}
+
+.ssa-app button:disabled {
+	opacity: 0.6;
+	cursor: wait;
+}
+
+.ssa-app .ssa-primary {
+	color: #fff;
+	background: var(--ssa-brand);
+	border-color: var(--ssa-brand);
+	min-height: 44px;
+	padding: 9px 18px;
+}
+
+.ssa-app .ssa-primary:hover {
+	color: #fff;
+	background: var(--ssa-brand-hover);
+}
+
+.ssa-app .ssa-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 18px;
+	margin-bottom: 22px;
+}
+
+.ssa-app .ssa-header p {
+	color: var(--ssa-muted);
+	margin: 0;
+}
+
+.ssa-app .ssa-eyebrow {
+	font-size: 11px;
+	letter-spacing: 0.12em;
+	font-weight: 700;
+	color: var(--ssa-muted) !important;
+	margin: 0 0 4px !important;
+}
+
+.ssa-app .ssa-panel,
+.ssa-app .ssa-metric,
+.ssa-app .ssa-empty {
+	background: var(--ssa-panel);
+	border: 1px solid var(--ssa-border);
+	border-radius: 14px;
+	box-shadow: 0 1px 0 rgba(30, 42, 62, 0.03);
+	padding: 20px;
+	margin-bottom: 16px;
+	min-width: 0;
+}
+
+.ssa-app .ssa-empty {
+	max-width: 700px;
+	padding: 28px;
+}
+
+.ssa-app .ssa-empty p,
+.ssa-app .ssa-footnote,
+.ssa-app .ssa-metric small,
+.ssa-app .ssa-consent small {
+	color: var(--ssa-muted);
+}
+
+.ssa-app .ssa-link {
+	border: 0 !important;
+	color: var(--ssa-brand) !important;
+	background: transparent !important;
+}
+
+.ssa-app .ssa-metrics {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.ssa-app .ssa-metric {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin: 0;
+}
+
+.ssa-app .ssa-metric strong {
+	font-size: 24px;
+	overflow-wrap: anywhere;
+}
+
+.ssa-app .ssa-metric small {
+	font-size: 12px;
+}
+
+.ssa-app .ssa-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1.6fr) minmax(250px, 1fr);
+	gap: 16px;
+}
+
+.ssa-app .ssa-panel-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.ssa-app .ssa-finding-row {
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	gap: 12px;
+	align-items: center;
+	text-align: left;
+	width: 100%;
+	border-width: 0 0 1px !important;
+	border-radius: 0 !important;
+}
+
+.ssa-app .ssa-severity {
+	display: inline-block;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: var(--ssa-unknown);
+}
+
+.ssa-app .ssa-severity.critical {
+	color: var(--ssa-critical);
+}
+
+.ssa-app .ssa-severity.high {
+	color: var(--ssa-high);
+}
+
+.ssa-app .ssa-severity.medium {
+	color: var(--ssa-medium);
+}
+
+.ssa-app .ssa-status {
+	display: inline-block;
+	color: var(--ssa-unknown);
+	font-weight: 600;
+}
+
+.ssa-app .ssa-status.pass {
+	color: var(--ssa-success);
+}
+
+.ssa-app .ssa-status.partial {
+	color: var(--ssa-medium);
+}
+
+.ssa-app .ssa-status.failed,
+.ssa-app .ssa-status.fail {
+	color: var(--ssa-critical);
+}
+
+.ssa-app .ssa-status.running {
+	color: var(--ssa-brand);
+}
+
+.ssa-app .ssa-footnote {
+	font-size: 12px;
+}
+
+.ssa-app .ssa-alert,
+.ssa-app .ssa-notice {
+	border-left: 4px solid var(--ssa-critical);
+	background: #fff;
+	padding: 12px 16px;
+}
+
+.ssa-app .ssa-notice {
+	border-color: var(--ssa-success);
+}
+
+.ssa-app .ssa-table-wrap {
+	overflow-x: auto;
+	width: 100%;
+}
+
+.ssa-app .ssa-table-wrap table {
+	border-collapse: collapse;
+	width: 100%;
+	min-width: 700px;
+	text-align: left;
+}
+
+.ssa-app .ssa-table-wrap th,
+.ssa-app .ssa-table-wrap td {
+	border-bottom: 1px solid var(--ssa-border);
+	padding: 11px 9px;
+	vertical-align: top;
+}
+
+.ssa-app .ssa-table-wrap th {
+	color: var(--ssa-muted);
+	font-size: 12px;
+}
+
+.ssa-app .ssa-table-wrap td small {
+	display: block;
+	color: var(--ssa-muted);
+}
+
+.ssa-app .ssa-filters {
+	display: flex;
+	align-items: end;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.ssa-app .ssa-filters label {
+	display: grid;
+	min-width: 0;
+	max-width: 100%;
+	gap: 5px;
+	color: var(--ssa-muted);
+}
+
+.ssa-app .ssa-filters input,
+.ssa-app .ssa-filters select {
+	min-width: 0;
+	max-width: 100%;
+	min-height: 40px;
+	padding: 7px;
+	border: 1px solid var(--ssa-border);
+	border-radius: 6px;
+	font: inherit;
+}
+
+.ssa-app .ssa-detail {
+	background: var(--ssa-panel-soft);
+	border: 1px solid var(--ssa-border);
+	border-radius: 10px;
+	padding: 18px;
+	margin: 14px 0;
+	overflow-wrap: anywhere;
+}
+
+.ssa-app .ssa-detail h3 {
+	margin-bottom: 6px;
+}
+
+.ssa-app .ssa-detail h4 {
+	margin-bottom: 0;
+}
+
+.ssa-app .ssa-close {
+	float: right;
+}
+
+.ssa-app .ssa-mobile-list {
+	display: none;
+}
+
+.ssa-app .ssa-mobile-card {
+	border: 1px solid var(--ssa-border);
+	border-radius: 8px;
+	padding: 14px;
+	margin: 10px 0;
+	overflow-wrap: anywhere;
+}
+
+.ssa-app .ssa-mobile-card h3 {
+	font-size: 16px;
+}
+
+.ssa-app .ssa-mobile-card p {
+	margin: 6px 0;
+}
+
+.ssa-app .ssa-consent {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 16px 0;
+	border-bottom: 1px solid var(--ssa-border);
+	cursor: pointer;
+}
+
+.ssa-app .ssa-consent input {
+	width: 18px;
+	height: 18px;
+	margin-top: 3px;
+}
+
+.ssa-app .ssa-consent span {
+	display: grid;
+	gap: 5px;
+}
+
+.ssa-app .ssa-actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: end;
+	gap: 8px;
+	margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+
+	.ssa-app {
+		padding: 16px;
+	}
+
+	.ssa-app .ssa-metrics {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.ssa-app .ssa-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 600px) {
+
+	.ssa-app {
+		padding: 12px;
+	}
+
+	.ssa-app .ssa-header {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.ssa-app .ssa-header .ssa-primary {
+		width: 100%;
+	}
+
+	.ssa-app .ssa-metrics {
+		grid-template-columns: 1fr;
+	}
+
+	.ssa-app .ssa-tabs {
+		flex-wrap: wrap;
+	}
+
+	.ssa-app .ssa-tabs button {
+		flex: 1;
+	}
+
+	.ssa-app .ssa-panel,
+	.ssa-app .ssa-metric {
+		padding: 15px;
+	}
+
+	.ssa-app .ssa-finding-row {
+		grid-template-columns: auto 1fr;
+	}
+
+	.ssa-app .ssa-finding-row > :last-child {
+		display: none;
+	}
+
+	.ssa-app .ssa-table-wrap[aria-label="Audit findings"] {
+		display: none;
+	}
+
+	.ssa-app .ssa-mobile-list {
+		display: block;
+	}
+}
+
+@media print {
+
+	body:has(.ssa-app) #wpadminbar,
+	body:has(.ssa-app) #adminmenumain,
+	body:has(.ssa-app) #wpfooter,
+	body:has(.ssa-app) .notice {
+		display: none !important;
+	}
+
+	body:has(.ssa-app) #wpcontent,
+	body:has(.ssa-app) #wpbody-content,
+	body:has(.ssa-app) .wrap:has(.ssa-app) {
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+
+	.ssa-app {
+		position: relative;
+		max-width: none;
+		padding: 0;
+		overflow: visible;
+		background: #fff;
+		color: #000;
+	}
+
+	.ssa-app .ssa-actions,
+	.ssa-app .ssa-tabs,
+	.ssa-app .ssa-filters,
+	.ssa-app button {
+		display: none !important;
+	}
+
+	.ssa-app .ssa-panel {
+		box-shadow: none;
+		border-color: #ccc;
+		break-inside: auto;
+	}
+
+	.ssa-app .ssa-report article {
+		break-inside: avoid;
+	}
+}
+
+.ssa-app button:focus-visible,
+.ssa-app a:focus-visible,
+.ssa-app input:focus-visible,
+.ssa-app select:focus-visible {
+	outline: 3px solid var(--ssa-brand);
+	outline-offset: 2px;
+}

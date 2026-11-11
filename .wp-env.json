@@ -1,0 +1,13 @@
+{
+  "core": "WordPress/WordPress#6.6",
+  "plugins": ["./site-security-auditor"],
+  "mappings": {
+    "project/tests": "./tests",
+    "project/vendor": "./vendor",
+    "project/phpunit-wp.xml.dist": "./phpunit-wp.xml.dist",
+    "project/site-security-auditor/includes": "./site-security-auditor/includes",
+    "project/site-security-auditor/site-security-auditor.php": "./site-security-auditor/site-security-auditor.php",
+    "project/scripts": "./scripts"
+  },
+  "config": { "WP_DEBUG": true, "WP_ENVIRONMENT_TYPE": "local" }
+}

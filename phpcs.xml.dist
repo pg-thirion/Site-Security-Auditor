@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ruleset name="Site Security Auditor">
+  <description>WordPress PHP coding standards.</description>
+  <file>site-security-auditor</file>
+  <file>tests/php</file>
+  <file>scripts</file>
+  <!-- tests/unit are standalone fixture runners with WordPress function stubs, checked by Composer self-tests instead. -->
+  <exclude-pattern>site-security-auditor/build/*</exclude-pattern>
+  <exclude-pattern>site-security-auditor/node_modules/*</exclude-pattern>
+  <exclude-pattern>site-security-auditor/src/*</exclude-pattern>
+  <rule ref="WordPress">
+    <!-- Preserve PSR-4 class/file casing and skip boilerplate comments on typed, self-describing code. -->
+    <exclude name="Squiz.Commenting.FileComment.Missing" />
+    <exclude name="Squiz.Commenting.ClassComment.Missing" />
+    <exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
+    <exclude name="Squiz.Commenting.FunctionComment.Missing" />
+    <exclude name="Squiz.Commenting.VariableComment.Missing" />
+    <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+    <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+  </rule>
+  <config name="minimum_supported_wp_version" value="6.6" />
+</ruleset>

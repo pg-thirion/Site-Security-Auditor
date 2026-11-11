@@ -1,0 +1,46 @@
+You are Codex acting as a senior WordPress plugin engineer, security engineer and frontend developer. Implement the complete “Site Security Auditor for WordPress” project in this repository.
+
+READ THESE ROOT FILES FIRST, IN THIS ORDER:
+1. SPEC.md      Product scope, security requirements, audit contracts and acceptance criteria.
+2. DESIGN.md    Exact admin UX, interface states, styling and accessibility requirements.
+3. PLAN.md      Repository structure, phased implementation and verification gates.
+4. PROMPT.txt   These working instructions.
+
+PRIMARY GOAL
+Build a production-minded, installable, open-source WordPress security auditing plugin. It must run real, read-only checks and produce evidence-based findings, not a simulated dashboard. The plugin must be capable of functioning locally without any external provider. Optional vulnerability lookups and WordPress.org core checksum retrieval require explicit, separate administrator opt-ins.
+
+NON-NEGOTIABLE REQUIREMENTS
+- Follow SPEC.md and DESIGN.md. Do not silently shrink scope or replace a security audit with fake data.
+- Never implement automated fixes, password inspection, malware claims, exploitation, port scans, unauthorised scanning or arbitrary URL requests.
+- Secure every private REST endpoint with a real permission_callback using manage_options. Use WordPress authentication/nonces for browser state changes. Nonces never replace capability checks.
+- Treat external provider output as untrusted. Validate schema, strip unsafe HTML, constrain URLs, cap sizes/timeouts, cache appropriately and fail safely to unknown.
+- No network calls by this plugin before opt-in. No telemetry, external fonts, remotely loaded JavaScript, hidden services or unnecessary SaaS.
+- Never include secrets, absolute server paths or sensitive configuration content in findings, API output, logs or report exports.
+- If an operation cannot be evaluated, show unknown. Never present unavailable data as a passed security check.
+- Scans must use bounded background batches, safe locks, idempotent retries and a secure fallback for sites where WP-Cron is delayed.
+- Use a genuine WordPress plugin backend, not a separate Node service or mock website. Build a polished React/TypeScript admin interface with WordPress-native dependencies and scoped CSS.
+- Include unit, integration and E2E tests, a clean installable plugin ZIP and development/release documentation.
+- Avoid claims that a passing audit guarantees security or that this plugin has been accepted by WordPress.org.
+
+EXECUTION STRATEGY
+1. Inspect the repository and environment. Identify existing files and do not delete user work.
+2. Create or update project tracking as you go. Work through PLAN.md phases in order, completing one verifiable vertical slice at a time.
+3. Start with the WordPress plugin scaffold and capability-secured admin shell. Then build storage, local checks, network opt-ins, score/history/exports, complete UX and release hardening.
+4. Write real implementations, clear types, test fixtures and readable documentation. Do not stub functions and claim completion.
+5. Run the closest available tests after each phase. Fix errors. Do not mark a phase complete without evidence from executed tests.
+6. When a listed dependency, API response, WordPress function or compatibility constraint is uncertain, check current official documentation in the environment if available. If not available, isolate the uncertainty with an adapter and tests, and document the assumption. Never invent verified support.
+7. Make security and privacy decisions explicit. Treat WordPress plugin directory rules and external API provider terms as constraints.
+8. Provide a final status report with implemented features, actual test commands/results, outstanding limitations, and the exact path to the release ZIP.
+
+EXPECTED DELIVERABLES
+- Full source under site-security-auditor/ and development tools at repository root, matching PLAN.md unless a documented reason requires a change.
+- Fully working admin interface: Overview, Findings, History, Report and Settings.
+- The 16 check catalogue entries from SPEC.md, with correct pass/fail/unknown handling.
+- Provider adapters and per-provider opt-in, secure scan orchestration, stored history and assessment coverage.
+- Print/Save as PDF report, authenticated CSV and JSON export. Do not substitute a broken “Download PDF” button for browser printing.
+- Automated tests, source comments where needed, a threat model, README, GPL licence, correct plugin readme.txt, GitHub Actions and a reproducible installable ZIP.
+
+IMPORTANT FINAL QUALITY BAR
+A polished interface without functioning checks is incomplete. A functioning audit that leaks data is unacceptable. Never skip authorisation or privacy requirements to make a demo look complete. Be precise about what was built, tested and remains uncertain.
+
+BEGIN NOW by reading the four files, inspecting the repository and executing Phase 1. Continue phase by phase as far as the available environment allows. Do not ask for repeated confirmation of requirements already present in these files.

@@ -1,0 +1,160 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: WP ${{ matrix.wordpress }} / PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        wordpress: ['6.6', 'latest']
+        php: ['8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, mysqli, pdo_mysql, pdo_sqlite, sqlite3, zip
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.2'
+          cache: npm
+          cache-dependency-path: site-security-auditor/package-lock.json
+
+      - name: Select WordPress version
+        env:
+          WP_MATRIX_VERSION: ${{ matrix.wordpress }}
+          PHP_MATRIX_VERSION: ${{ matrix.php }}
+        run: >-
+          node -e "const fs=require('fs'),p='.wp-env.json';
+          const c=JSON.parse(fs.readFileSync(p,'utf8'));
+          c.core=process.env.WP_MATRIX_VERSION==='latest'?null:'WordPress/WordPress#'+process.env.WP_MATRIX_VERSION;
+          c.phpVersion=process.env.PHP_MATRIX_VERSION;
+          fs.writeFileSync(p,JSON.stringify(c,null,2));"
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Install frontend dependencies
+        run: npm ci --prefix site-security-auditor
+
+      - name: Run unit tests and coding standards
+        run: |
+          composer test
+          composer lint
+
+      - name: Check and build frontend
+        run: |
+          npm --prefix site-security-auditor run typecheck
+          npm --prefix site-security-auditor run lint
+          npm --prefix site-security-auditor run build
+
+      - name: Start WordPress test environment
+        run: npx --yes @wordpress/env start
+
+      - name: Run local WordPress REST and scan smoke check
+        run: npx --yes @wordpress/env run cli --env-cwd=project wp --path=/var/www/html eval-file scripts/runtime-smoke.php
+
+      - name: Check HTTP cookie authentication and exports
+        env:
+          SSA_TEST_URL: http://localhost:8888
+          SSA_TEST_USER: admin
+          SSA_TEST_PASSWORD: password
+        run: python3 scripts/http-smoke.py
+
+      - name: Run WordPress integration tests
+        run: npx --yes @wordpress/env run tests-cli --env-cwd=project vendor/bin/phpunit -c phpunit-wp.xml.dist
+
+      - name: Install Playwright browser
+        run: site-security-auditor/node_modules/.bin/playwright install --with-deps chromium
+
+      - name: Run authenticated browser checks
+        run: npm --prefix site-security-auditor run e2e
+
+      - name: Run Plugin Check
+        if: matrix.wordpress == 'latest' && matrix.php == '8.4'
+        run: |
+          npx --yes @wordpress/env run cli wp plugin install plugin-check --activate
+          npx --yes @wordpress/env run cli wp plugin check site-security-auditor
+
+      - name: Package candidate ZIP
+        if: matrix.wordpress == 'latest' && matrix.php == '8.4'
+        run: |
+          php scripts/package-plugin.php
+          sha256sum artifacts/site-security-auditor.zip > /tmp/site-security-auditor.sha256
+          php scripts/package-plugin.php
+          sha256sum --check /tmp/site-security-auditor.sha256
+
+      - name: Prepare clean archive test environment
+        if: matrix.wordpress == 'latest' && matrix.php == '8.4'
+        run: >-
+          node -e "const fs=require('fs');
+          const c=JSON.parse(fs.readFileSync('.wp-env.json','utf8'));
+          c.plugins=[]; c.port=8890; c.testsPort=8891;
+          c.mappings={'project-artifacts':'./artifacts','project-scripts':'./scripts'};
+          fs.writeFileSync('.wp-env.package.json',JSON.stringify(c,null,2));"
+
+      - name: Start clean archive test environment
+        if: matrix.wordpress == 'latest' && matrix.php == '8.4'
+        run: npx --yes @wordpress/env --config=.wp-env.package.json start
+
+      - name: Install the candidate archive
+        if: matrix.wordpress == 'latest' && matrix.php == '8.4'
+        run: npx --yes @wordpress/env --config=.wp-env.package.json run cli wp plugin install /var/www/html/project-artifacts/site-security-auditor.zip --activate --path=/var/www/html
+
+      - name: Verify the installed archive
+        if: matrix.wordpress == 'latest' && matrix.php == '8.4'
+        env:
+          SSA_TEST_URL: http://localhost:8890
+          SSA_TEST_USER: admin
+          SSA_TEST_PASSWORD: password
+        run: |
+          npx --yes @wordpress/env --config=.wp-env.package.json run cli --env-cwd=project-scripts wp --path=/var/www/html eval-file runtime-smoke.php
+          python3 scripts/http-smoke.py
+
+      - uses: actions/upload-artifact@v4
+        if: matrix.wordpress == 'latest' && matrix.php == '8.4'
+        with:
+          name: site-security-auditor-candidate
+          path: artifacts/site-security-auditor.zip
+
+      - name: Stop WordPress test environment
+        if: always()
+        run: npx --yes @wordpress/env stop
+
+      - name: Stop clean archive test environment
+        if: always() && matrix.wordpress == 'latest' && matrix.php == '8.4'
+        run: npx --yes @wordpress/env --config=.wp-env.package.json stop
+
+  release:
+    name: Publish WordPress plugin ZIP
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site-security-auditor-candidate
+          path: release
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test -f release/site-security-auditor.zip
+          tag="main-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}-${GITHUB_SHA::7}"
+          gh release create "$tag" release/site-security-auditor.zip \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Site Security Auditor build ${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}" \
+            --notes "Upload site-security-auditor.zip via Plugins > Add New Plugin > Upload Plugin."
